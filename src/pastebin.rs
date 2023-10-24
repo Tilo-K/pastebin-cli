@@ -1,4 +1,20 @@
+use anyhow::Result;
+use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, error::Error};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Paste {
+    pub paste_key: String,
+    pub paste_date: i64,
+    pub paste_title: String,
+    pub paste_size: u64,
+    pub paste_expire_date: i64,
+    pub paste_private: u8,
+    pub paste_format_long: String,
+    pub paste_format_short: String,
+    pub paste_url: String,
+    pub paste_hits: u64,
+}
 
 pub async fn create_paste(
     api_key: &str,
@@ -61,11 +77,7 @@ pub async fn delete_paste(
     Ok(req.status().to_string() + "\n" + &req.text().await?)
 }
 
-pub async fn get_user_key(
-    api_key: &str,
-    username: String,
-    password: String,
-) -> Result<String, Box<dyn Error>> {
+pub async fn get_user_key(api_key: &str, username: String, password: String) -> Result<String> {
     let client = reqwest::Client::new();
 
     let mut map = HashMap::new();
@@ -85,4 +97,32 @@ pub async fn get_user_key(
     dbg!(&req);
     println!("{}", req.text().await?);
     panic!("Error logging in.");
+}
+
+pub async fn list_pastes(api_key: &str, user_key: &str, max_results: u16) -> Result<Vec<Paste>> {
+    let client = reqwest::Client::new();
+
+    let mut map = HashMap::new();
+    map.insert("api_dev_key", api_key.trim().to_owned());
+    map.insert("api_user_key", user_key.trim().to_owned());
+    map.insert("api_option", "list".to_owned());
+    map.insert("api_results_limit", max_results.to_string());
+
+    let req = client
+        .post("https://pastebin.com/api/api_post.php")
+        .form(&map)
+        .send()
+        .await?;
+
+    if req.status() == 200 {
+        let data = req.text().await?;
+        let pastes: Vec<Paste> = quick_xml::de::from_str(&data).unwrap();
+        return Ok(pastes);
+    }
+
+    return Err(anyhow::format_err!(
+        "{}\n{}",
+        req.status().to_string(),
+        req.text().await?
+    ));
 }

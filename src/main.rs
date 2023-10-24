@@ -1,3 +1,5 @@
+use chrono::prelude::*;
+use chrono::DateTime;
 use clap::{Parser, Subcommand};
 use std::fs;
 use std::path::PathBuf;
@@ -16,12 +18,7 @@ struct Cli {
 enum Action {
     Create { file_path: std::path::PathBuf },
     Delete { paste_id: String },
-    /*
-    Edit {
-        paste_id: String,
-        file_path: std::path::PathBuf,
-    },
-    */
+    List { max_results: Option<u16> },
 }
 
 #[tokio::main]
@@ -34,6 +31,7 @@ async fn main() {
     match args.action {
         Action::Create { file_path } => create(file_path).await,
         Action::Delete { paste_id } => delete(paste_id).await,
+        Action::List { max_results } => list(max_results).await,
     };
 }
 
@@ -68,4 +66,32 @@ async fn delete(paste_id: String) {
 
 async fn edit(paste_id: String, file_path: PathBuf) {
     todo!("No offical way to do that yet");
+}
+
+async fn list(max_results: Option<u16>) {
+    let (x, y) = termion::terminal_size().unwrap();
+    let resp = pastebin::list_pastes(
+        &keys::API_KEY.lock().unwrap(),
+        &keys::USER_KEY.lock().unwrap(),
+        max_results.unwrap_or(10),
+    )
+    .await
+    .unwrap();
+
+    let line = "-".repeat(((x - 15) / 2).into());
+    println!("{}Top {} pastes{}", line, max_results.unwrap_or(10), line);
+
+    for paste in resp {
+        let mut title = paste.paste_title;
+        if title == "" {
+            title = "Untitled".to_owned();
+        }
+
+        let naive = NaiveDateTime::from_timestamp_opt(paste.paste_date.into(), 0).unwrap();
+
+        let datetime: DateTime<Utc> = DateTime::from_utc(naive, Utc);
+        let newdate = datetime.format("%Y-%m-%d %H:%M:%S");
+
+        println!("{}\t{}\t{}", title, newdate, paste.paste_url);
+    }
 }
