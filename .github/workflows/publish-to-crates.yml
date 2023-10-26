@@ -1,0 +1,18 @@
+name: Publish package to crates
+run-name: ${{ github.actor }} is publishing to crates.io
+on: 
+  push:
+    branches:
+          - master
+jobs:
+  Publish-To-Crates-Io:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v3
+        - uses: actions-rs/toolchain@v1
+          with:
+              toolchain: stable
+              override: true
+        - uses: katyo/publish-crates@v2
+          with:
+              registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
