@@ -55,7 +55,6 @@ pub async fn get_user_key() {
 
     if key == "" {
         let mut username = String::new();
-        let mut password = String::new();
 
         print!("Username: ");
         io::stdout().lock().flush().unwrap();
@@ -65,7 +64,7 @@ pub async fn get_user_key() {
 
         print!("Password: ");
         io::stdout().lock().flush().unwrap();
-        password = read_password().unwrap();
+        let password = read_password().unwrap();
 
         let key = pastebin::get_user_key(&API_KEY.lock().unwrap(), username, password)
             .await
@@ -78,4 +77,20 @@ pub async fn get_user_key() {
     }
 
     USER_KEY.lock().unwrap().push_str(&key);
+}
+
+pub fn clear_keys() {
+    API_KEY.lock().unwrap().clear();
+    USER_KEY.lock().unwrap().clear();
+
+    let home_dir = match home::home_dir() {
+        Some(path) => path,
+        None => panic!("Impossible to get your home dir!"),
+    };
+
+    let key_file = home_dir.join(".pastebin_key");
+    let user_key_file = home_dir.join(".pastebin_userkey");
+
+    fs::remove_file(key_file).expect("Error removing API KEY file");
+    fs::remove_file(user_key_file).expect("Error removing USER KEY file");
 }

@@ -4,6 +4,7 @@ use clap::{Parser, Subcommand};
 use std::fs;
 use std::path::PathBuf;
 
+
 mod keys;
 mod pastebin;
 
@@ -19,6 +20,7 @@ enum Action {
     Create { file_path: std::path::PathBuf },
     Delete { paste_id: String },
     List { max_results: Option<u16> },
+    ClearKeys,
 }
 
 #[tokio::main]
@@ -32,6 +34,7 @@ async fn main() {
         Action::Create { file_path } => create(file_path).await,
         Action::Delete { paste_id } => delete(paste_id).await,
         Action::List { max_results } => list(max_results).await,
+        Action::ClearKeys => keys::clear_keys(),
     };
 }
 
@@ -64,12 +67,7 @@ async fn delete(paste_id: String) {
     println!("{}", resp);
 }
 
-async fn edit(paste_id: String, file_path: PathBuf) {
-    todo!("No offical way to do that yet");
-}
-
 async fn list(max_results: Option<u16>) {
-    let (x, y) = termion::terminal_size().unwrap();
     let resp = pastebin::list_pastes(
         &keys::API_KEY.lock().unwrap(),
         &keys::USER_KEY.lock().unwrap(),
@@ -78,7 +76,7 @@ async fn list(max_results: Option<u16>) {
     .await
     .unwrap();
 
-    let line = "-".repeat(((x - 15) / 2).into());
+    let line = "-".repeat(5);
     println!("{}Top {} pastes{}", line, max_results.unwrap_or(10), line);
 
     for paste in resp {
