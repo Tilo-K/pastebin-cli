@@ -32,13 +32,14 @@ pub async fn create_paste(
     map.insert("api_paste_code", content);
     map.insert("api_paste_private", "0".to_owned());
     map.insert("api_paste_expire_date", "1W".to_owned());
+    map.insert("api_paste_name", name);
 
     if paste_id.is_some() {
         let id = paste_id.unwrap();
         map.insert("api_paste_key", id);
     }
 
-    let mut req = client
+    let req = client
         .post("https://pastebin.com/api/api_post.php")
         .form(&map);
 
