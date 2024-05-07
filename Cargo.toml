@@ -6,6 +6,7 @@ description = "A simple CLI for pastebin.com"
 authors = ["Tilo K"]
 license = "AGPL-3.0-or-later"
 repository = "https://github.com/Tilo-K/pastebin-cli"
+homepage = "https://tilok.dev"
 
 [package.metadata.wix]
 upgrade-guid = "C59671CA-09B6-4A5C-B381-BFDECECB9F9D"
@@ -51,3 +52,5 @@ npm-scope = "@tilo"
 pr-run-mode = "plan"
 # Whether to install an updater program
 install-updater = true
+
+allow-dirty = ["ci"]
