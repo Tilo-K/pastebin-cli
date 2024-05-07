@@ -53,4 +53,4 @@ pr-run-mode = "plan"
 # Whether to install an updater program
 install-updater = true
 
-allow-dirty = false
+allow-dirty = ["ci"]
