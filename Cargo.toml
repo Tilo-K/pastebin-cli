@@ -1,10 +1,17 @@
 [package]
 name = "pastebin-cli"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 description = "A simple CLI for pastebin.com"
 authors = ["Tilo K"]
 license = "AGPL-3.0-or-later"
+repository = "https://github.com/Tilo-K/pastebin-cli"
+
+[package.metadata.wix]
+upgrade-guid = "C59671CA-09B6-4A5C-B381-BFDECECB9F9D"
+path-guid = "53568045-D9C0-4E69-82E4-8CA9D45ECC5D"
+license = false
+eula = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -18,3 +25,29 @@ reqwest = { version = "0.11.22", features = ["json"] }
 rpassword = "7.2.0"
 serde = { version = "1.0.189", features = ["serde_derive", "derive"] }
 tokio = { version = "1.33.0", features = ["full"] }
+
+# The profile that 'cargo dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
+
+# Config for 'cargo dist'
+[workspace.metadata.dist]
+# The preferred cargo-dist version to use in CI (Cargo.toml SemVer syntax)
+cargo-dist-version = "0.14.0"
+# CI backends to support
+ci = "github"
+# The installers to generate for each app
+installers = ["shell", "powershell", "npm", "homebrew", "msi"]
+# Target platforms to build apps for (Rust target-triple syntax)
+targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc"]
+# The archive format to use for windows builds (defaults .zip)
+windows-archive = ".tar.gz"
+# The archive format to use for non-windows builds (defaults .tar.xz)
+unix-archive = ".tar.gz"
+# A namespace to use when publishing this package to the npm registry
+npm-scope = "@tilo"
+# Publish jobs to run in CI
+pr-run-mode = "plan"
+# Whether to install an updater program
+install-updater = true
