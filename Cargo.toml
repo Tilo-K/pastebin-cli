@@ -1,6 +1,6 @@
 [package]
 name = "pastebin-cli"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 description = "A simple CLI for pastebin.com"
 authors = ["Tilo K"]
