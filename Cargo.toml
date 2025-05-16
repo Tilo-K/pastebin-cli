@@ -1,11 +1,12 @@
 [package]
 name = "pastebin-cli"
-version = "0.1.5"
+version = "0.1.7"
 edition = "2021"
 description = "A simple CLI for pastebin.com"
 authors = ["Tilo K"]
 license = "AGPL-3.0-or-later"
 repository = "https://github.com/Tilo-K/pastebin-cli"
+homepage = "https://tilok.dev"
 homepage = "https://tilok.dev"
 
 [package.metadata.wix]
@@ -41,7 +42,12 @@ ci = "github"
 # The installers to generate for each app
 installers = ["shell", "powershell", "npm", "homebrew", "msi"]
 # Target platforms to build apps for (Rust target-triple syntax)
-targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc"]
+targets = [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    "x86_64-unknown-linux-gnu",
+    "x86_64-pc-windows-msvc",
+]
 # The archive format to use for windows builds (defaults .zip)
 windows-archive = ".tar.gz"
 # The archive format to use for non-windows builds (defaults .tar.xz)
@@ -53,4 +59,5 @@ pr-run-mode = "plan"
 # Whether to install an updater program
 install-updater = true
 
+allow-dirty = ["ci"]
 allow-dirty = ["ci"]
