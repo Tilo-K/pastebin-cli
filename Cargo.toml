@@ -1,6 +1,6 @@
 [package]
 name = "pastebin-cli"
-version = "0.1.7"
+version = "0.1.8"
 edition = "2021"
 description = "A simple CLI for pastebin.com"
 authors = ["Tilo K"]
@@ -17,15 +17,15 @@ eula = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.75"
-chrono = "0.4.31"
-clap = { version = "4.4.6", features = ["derive"] }
-home = "0.5.5"
-quick-xml = { version = "0.31.0", features = ["serde", "serialize"] }
-reqwest = { version = "0.11.22", features = ["json"] }
-rpassword = "7.2.0"
-serde = { version = "1.0.189", features = ["serde_derive", "derive"] }
-tokio = { version = "1.33.0", features = ["full"] }
+anyhow = "1.0.98"
+chrono = "0.4.41"
+clap = { version = "4.5.38", features = ["derive"] }
+home = "0.5.11"
+quick-xml = { version = "0.37.5", features = ["serde", "serialize"] }
+reqwest = { version = "0.12.15", features = ["json"] }
+rpassword = "7.4.0"
+serde = { version = "1.0.219", features = ["serde_derive", "derive"] }
+tokio = { version = "1.45.0", features = ["full"] }
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
@@ -41,7 +41,12 @@ ci = "github"
 # The installers to generate for each app
 installers = ["shell", "powershell", "npm", "homebrew", "msi"]
 # Target platforms to build apps for (Rust target-triple syntax)
-targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc"]
+targets = [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    "x86_64-unknown-linux-gnu",
+    "x86_64-pc-windows-msvc",
+]
 # The archive format to use for windows builds (defaults .zip)
 windows-archive = ".tar.gz"
 # The archive format to use for non-windows builds (defaults .tar.xz)

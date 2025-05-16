@@ -1,9 +1,7 @@
-use chrono::prelude::*;
 use chrono::DateTime;
 use clap::{Parser, Subcommand};
 use std::fs;
 use std::path::PathBuf;
-
 
 mod keys;
 mod pastebin;
@@ -79,17 +77,33 @@ async fn list(max_results: Option<u16>) {
     let line = "-".repeat(5);
     println!("{}Top {} pastes{}", line, max_results.unwrap_or(10), line);
 
+    let mut max_length = 8;
+    let max = resp.iter().map(|paste| paste.paste_title.len()).max();
+    if max.is_some() {
+        if max.unwrap() > max_length {
+            max_length = max.unwrap();
+        }
+    }
+
     for paste in resp {
         let mut title = paste.paste_title;
         if title == "" {
             title = "Untitled".to_owned();
         }
 
-        let naive = NaiveDateTime::from_timestamp_opt(paste.paste_date.into(), 0).unwrap();
+        title = pad_string(&title, max_length);
 
-        let datetime: DateTime<Utc> = DateTime::from_utc(naive, Utc);
-        let newdate = datetime.format("%Y-%m-%d %H:%M:%S");
+        let datetime = DateTime::from_timestamp(paste.paste_date.into(), 0).unwrap();
+        let formatted_date = datetime.format("%Y-%m-%d %H:%M:%S");
 
-        println!("{}\t{}\t{}", title, newdate, paste.paste_url);
+        println!("{}\t{}\t{}", title, formatted_date, paste.paste_url);
     }
+}
+
+fn pad_string(s: &str, length: usize) -> String {
+    let mut s = s.to_owned();
+    while s.len() < length {
+        s.push(' ');
+    }
+    s
 }
