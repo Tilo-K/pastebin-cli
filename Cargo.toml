@@ -59,4 +59,3 @@ pr-run-mode = "plan"
 install-updater = true
 
 allow-dirty = ["ci"]
-allow-dirty = ["ci"]
