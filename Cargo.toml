@@ -1,12 +1,11 @@
 [package]
 name = "pastebin-cli"
-version = "0.1.7"
+version = "0.1.8"
 edition = "2021"
 description = "A simple CLI for pastebin.com"
 authors = ["Tilo K"]
 license = "AGPL-3.0-or-later"
 repository = "https://github.com/Tilo-K/pastebin-cli"
-homepage = "https://tilok.dev"
 homepage = "https://tilok.dev"
 
 [package.metadata.wix]
